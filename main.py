@@ -1,49 +1,27 @@
-from games.tic_tac_toe import TicTacToe
-def main():
-    game = TicTacToe()
-    state = game.get_initial_state()
-    print("Initial State:")
-    game.display(state)
-    
-    while not game.is_terminal(state):
-        legal_moves = game.get_legal_moves(state)
-        print("Legal Moves:", legal_moves)
-        
-        # Example move (you can replace this with user input or AI logic)
-        move = input("Enter your move (row,col) or 'q' to quit: ")
-        if move.lower() == 'q':
-          print("Exiting the game...")
-          exit()
-        try: 
-            move = tuple(map(int, move.split(',')))
-            if move not in legal_moves:
-                print("Invalid move. Try again.")
-                continue
-        except ValueError:
-            print("Invalid input. Please enter row,col format.")
-            continue
-        # Check if the move is valid
-        if not game.is_valid_move(state, move):
-            print("Invalid move. Try again.")
-            continue
-        # Make the move
-        if move:
-            state = game.make_move(state, move, game.current_player)
-            print(f"Player {game.current_player} makes move: {move}")
-            game.display(state)
-            game.current_player = TicTacToe.player2 if game.current_player == TicTacToe.player1 else TicTacToe.player1
-        else:
-            break
-    
-    winner = game.get_winner(state)
-    if winner:
-        print(f"Winner: {winner}")
-    else:
-        print("It's a draw!")
-        
+from ui.tic_tac_toe_ui import tic_tac_toe_ui
+
 if __name__ == "__main__":
-  main()
-    
-
-
-      
+  print("Welcome to Muli-Games-Playing Agent")
+  print("1. Tic Tac Toe")
+  print("2. Nim")
+  print("3. Tiger vs Dogs")
+  print("4. Custom Own Game")
+  print("5. Exit")
+  
+  while True:
+    choice = input("Choose an option (1-5): ")
+    match choice:
+      case '1':
+        tic_tac_toe_ui()
+        break
+      case '2':
+        print("Nim game is not implemented yet.")
+      case '3':
+        print("Tiger vs Dogs game is not implemented yet.")
+      case '4':
+        print("New game is not implemented yet.")
+      case '5':
+        print("Exiting the game...")
+        exit()
+      case _:
+        print("Invalid choice. Please try again.")

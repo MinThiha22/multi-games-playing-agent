@@ -7,6 +7,10 @@ class Game(ABC):
     """Returns the initial state of the game."""
     pass
   
+  def get_current_player(self):
+    """Returns the current player."""
+    pass
+  
   @abstractmethod
   def get_legal_moves(self, state):
     """Returns a list of possible legal moves from the given state."""

@@ -1,15 +1,23 @@
+import random
 from games.game import Game
+from copy import deepcopy
+
 class TicTacToe(Game):
-  player1 = 'X'
-  player2 = 'O'
-  EMPTY = ' '
-  
-  def __init__(self, current_player=player1):
+  def __init__(self):
+    self.player1 = 'X'
+    self.player2 = 'O'
+    self.EMPTY = ' '
     self.state = [[' ' for _ in range(3)] for _ in range(3)]
-    self.current_player = current_player
+    self.current_player = self.player1 # Default to player1
     
   def get_initial_state(self):
     return self.state
+  
+  def change_player(self):
+    if self.current_player == self.player1:
+      self.current_player = self.player2
+    else:
+      self.current_player = self.player1
   
   def get_legal_moves(self, state):
     legal_moves = []
@@ -24,7 +32,7 @@ class TicTacToe(Game):
     return 0 <= i < 3 and 0 <= j < 3 and state[i][j] == self.EMPTY
   
   def make_move(self, state, move, player):
-    copy_state = [row[:] for row in state]
+    copy_state = deepcopy(state)
     i, j = move
     if copy_state[i][j] == self.EMPTY:
       copy_state[i][j] = player
@@ -65,7 +73,10 @@ class TicTacToe(Game):
       print(' | '.join(state[i]))
       if i < 2:
         print('--+---+--')
-  
-  
-      
-  
+                     
+  #Random move
+  def random_move(self, state, player):
+    legal_moves = self.get_legal_moves(state)
+    if legal_moves:
+      return random.choice(legal_moves)
+    return None
