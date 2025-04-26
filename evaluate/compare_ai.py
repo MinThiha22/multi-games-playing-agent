@@ -5,9 +5,11 @@ from algorithms.alphabeta_limited import best_move_ab_limited
 
 def compare_ai(game, algorithm1, algorithm2, depth1=None, depth2=None, num_games=10):
   
-  algo1_name = f"{algorithm1}" + (f"_depth{depth1}" if algorithm1 in "limited" else "")
-  algo2_name = f"{algorithm2}" + (f"_depth{depth2}" if algorithm2 == "limited" else "")
-  print(f"Comparing {algo1_name} (X) vs {algo2_name} (O) for {num_games} games.")
+  algo1_name = f"{algorithm1}" + (f"_depth{depth1}" if algorithm1 in ["limited", "ab_limited"]else "")
+  algo2_name = f"{algorithm2}" + (f"_depth{depth2}" if algorithm2 in ["limited", "ab_limited"] else "")
+  print("**"*25)
+  print(f"Comparing {algo1_name} (X) vs {algo2_name} (O) for {num_games} games.......")
+  print("**"*25)
   results = {
     f'{algo1_name}_wins': 0,
     f'{algo2_name}_wins': 0,

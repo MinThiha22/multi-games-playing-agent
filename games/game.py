@@ -1,3 +1,5 @@
+# Abstract game class
+
 from abc import ABC, abstractmethod
 
 class Game(ABC):
@@ -7,8 +9,9 @@ class Game(ABC):
     """Returns the initial state of the game."""
     pass
   
-  def get_current_player(self):
-    """Returns the current player."""
+  @abstractmethod
+  def change_player(self):
+    """Changes the current player to opposite player."""
     pass
   
   @abstractmethod
@@ -27,6 +30,11 @@ class Game(ABC):
     pass
   
   @abstractmethod
+  def get_winner(self, state):
+    """Returns the winner of the game if it is over, otherwise None."""
+    pass
+  
+  @abstractmethod
   def is_terminal(self, state):
     """Returns True if the game is over, False otherwise."""
     pass
@@ -37,11 +45,11 @@ class Game(ABC):
     pass
   
   @abstractmethod
-  def get_winner(self, state):
-    """Returns the winner of the game if it is over, otherwise None."""
+  def display(self, state):
+    """Displays the current state of the game."""
     pass
   
   @abstractmethod
-  def display(self, state):
-    """Displays the current state of the game."""
+  def random_move(self, state):
+    """Returns a random legal move from the given state."""
     pass

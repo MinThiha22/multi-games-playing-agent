@@ -1,6 +1,7 @@
 from evaluate.metrics import EvaluationMetrics
 import time
 
+# Alpha Beta pruning algorithm with complete depth first search
 def alphabeta_complete(game, state, player, alpha, beta, is_maximising):
   if game.is_terminal(state):
     return game.evaluate(state)
@@ -32,7 +33,7 @@ def alphabeta_complete(game, state, player, alpha, beta, is_maximising):
         break
     return min_eval
 
-# AlphaBeta_Complete function to find the best move
+# Alpha Beta Complete function to find the best move
 def best_move_ab_complete(game, state, player, alpha=float('-inf'), beta=float('inf')):
   is_maximising = (player == game.player1)
   best_eval = float('-inf') if is_maximising else float('inf')

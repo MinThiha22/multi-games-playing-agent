@@ -1,6 +1,7 @@
 from evaluate.metrics import EvaluationMetrics
 import time
 
+# Alpha beta pruning algorithm with limited depth
 def alphabeta_limited(game, state, depth, player, alpha, beta, is_maximising):
   if depth == 0 or game.is_terminal(state):
     return game.evaluate(state)
@@ -32,7 +33,7 @@ def alphabeta_limited(game, state, depth, player, alpha, beta, is_maximising):
         break
     return min_eval
 
-# AlphaBeta_Limited function to find the best move
+# Alpha Beta Limited function to find the best move
 def best_move_ab_limited(game, state, depth, player, alpha=float('-inf'), beta=float('inf')):
   is_maximising = (player == game.player1)
   best_eval = float('-inf') if is_maximising else float('inf')
