@@ -1,4 +1,4 @@
-from evaluate.metrics import EvaluationMetrics
+from evaluation.metrics import EvaluationMetrics
 import time
 
 # Minimax algorithm with limited depth search

@@ -1,5 +1,5 @@
 from games.tic_tac_toe import TicTacToe
-from evaluate.compare_ai import compare_ai
+from evaluation.compare_ai import compare_ai
 from algorithms.minmax_complete import best_move_complete
 from algorithms.minmax_limited import best_move_limited
 from algorithms.alphabeta_complete import best_move_ab_complete
@@ -25,10 +25,7 @@ def manual_game(game):
     legal_moves = game.get_legal_moves(state)
     print("Legal Moves:", legal_moves)
     
-    move = input("Enter your move (row,col) or 'q' to quit: ")
-    if move.lower() == 'q':
-      print("Exiting the game...")
-      break
+    move = input("Enter your move row,col (eg. 1,2):")
     try: 
         move = tuple(map(int, move.split(',')))
         if move not in legal_moves:
