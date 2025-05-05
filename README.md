@@ -2,15 +2,16 @@
 
 ## Overview
 
-This project is a multi-games playing agent designed to play various games using AI algorithms. The agent.
+This project is a multi-games playing agent designed to play various games using AI algorithms.
 
 ## Features
 
-- Supports multiple games. (tic-tac-toe, Nim, Tiger vs Dogs)
+- Supports multiple games. (Tic-Tac-Toe, Nim, Tiger vs Dogs, Take Away Game)
 - Implements AI algorithms such as Minimax abd Alpha-Beta Pruning.
 - Configurable for different game rules.
 - Can compare two algorithms and see their execution times and win-lose-draw.
 - Provides a user-friendly command line interface.
+- Scalable game for Tic-Tac-Toe, Nim and Take Away games.
 
 ## Installation
 
@@ -41,7 +42,7 @@ python3 main.py
 - Tic-Tac-Toe
 - Nim
 - Tiger vs Dogs
-- Custom Own Game
+- Custom Game (Take Away Game)
 
 ## Contact
 

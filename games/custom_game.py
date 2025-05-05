@@ -1,5 +1,4 @@
 # Take Away Game
-
 from games.game import Game
 from evaluation.metrics import EvaluationMetrics
 from copy import deepcopy
@@ -16,15 +15,13 @@ class TakeAway(Game):
     return self.starting_tokens
 
   def change_player(self):
-    # Switch the current player
     self.current_player = self.player1 if self.current_player == self.player2 else self.player2
 
   def get_legal_moves(self, state):
-    # Players can take 1, 2, or 3 tokens, but not more than the remaining tokens
+    # Players can take 1, 2, or 3 tokens, but not more than the remaining chips
     return [x for x in [1,2,3] if x <= state]
 
   def is_valid_move(self, state, move):
-    # A move is valid if it's in the list of legal moves
     return move in self.get_legal_moves(state)
 
   def make_move(self, state, move, player=None, evaluate=False):
@@ -46,7 +43,6 @@ class TakeAway(Game):
     return 0
   
   def display(self, state):
-    # Display the current state of the game
     print(f"Chips remaining: {state}")
            
   # Random move

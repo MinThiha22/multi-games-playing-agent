@@ -5,8 +5,6 @@ def scalable_takeaway():
   print("Scalable Take Away Game")
   while True:
     x = input("Enter number of chips:(x): ")
-    
-    
     if x.isdigit():
       x = int (x)
       break
