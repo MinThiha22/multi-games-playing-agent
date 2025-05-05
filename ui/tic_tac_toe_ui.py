@@ -58,12 +58,13 @@ def tic_tac_toe_ui():
         scalable_m_n_k()
         break
       case '5':
-        print("Exiting the game...")
-        exit()
+        print("Exiting Tic Tac Toe...")
+        print("Going back to main menu...")
+        return
       case _:
         print("Invalid choice. Please try again.")
   
   print('Thank you for playing!')
-  print('Returning to main menu...')
+  print('Returning to menu...')
   print('=='*50)
   tic_tac_toe_ui()

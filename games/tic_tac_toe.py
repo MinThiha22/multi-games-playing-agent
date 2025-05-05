@@ -1,6 +1,7 @@
-import random
 from games.game import Game
+from evaluation.metrics import EvaluationMetrics
 from copy import deepcopy
+import random, time
 
 class TicTacToe(Game):
   def __init__(self, m=3, n=3, k=3):
@@ -34,7 +35,7 @@ class TicTacToe(Game):
     i, j = move
     return 0 <= i < self.m and 0 <= j < self.n and state[i][j] == self.EMPTY
   
-  def make_move(self, state, move, player):
+  def make_move(self, state, move, player, evaluate=False):
     copy_state = deepcopy(state)
     i, j = move
     if copy_state[i][j] == self.EMPTY:
@@ -62,7 +63,7 @@ class TicTacToe(Game):
     return None 
   """
  
-  def get_winner(self, state):
+  def get_winner(self, state, player=None):
     directions = [(0,1), (1,0), (1,1), (1,-1)]  # right, down, down-right, down-left
     for i in range(self.m):
       for j in range(self.n):
@@ -83,7 +84,7 @@ class TicTacToe(Game):
   def is_terminal(self, state):
     return self.get_winner(state) is not None or all(cell != self.EMPTY for row in state for cell in row)
   
-  def evaluate(self, state):
+  def evaluate(self, state,player=None):
     winner = self.get_winner(state)
     if winner == self.player1:
       return 1
@@ -99,8 +100,11 @@ class TicTacToe(Game):
         print('--+' + '---+' * (self.n - 2) + '--')
                      
   #Random move
-  def random_move(self, state, player):
+  def random_move(self, state):
+    metr = EvaluationMetrics()
+    start_time = time.time()
     legal_moves = self.get_legal_moves(state)
     if legal_moves:
-      return random.choice(legal_moves)
+      metr.execution_time = time.time() - start_time
+      return random.choice(legal_moves), metr
     return None

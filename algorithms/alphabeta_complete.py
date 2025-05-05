@@ -4,7 +4,7 @@ import time
 # Alpha Beta pruning algorithm with complete depth first search
 def alphabeta_complete(game, state, player, alpha, beta, is_maximising):
   if game.is_terminal(state):
-    return game.evaluate(state)
+    return game.evaluate(state,player)
   if alpha >= beta:
     return 0 
   legal_moves = game.get_legal_moves(state) 
@@ -12,7 +12,7 @@ def alphabeta_complete(game, state, player, alpha, beta, is_maximising):
   if is_maximising:
     max_eval = float('-inf')
     for move in legal_moves:
-      child_state = game.make_move(state, move, player)
+      child_state = game.make_move(state, move, player, evaluate = True)
       next_player = game.player2 if player == game.player1 else game.player1
       eval = alphabeta_complete(game, child_state, next_player, alpha, beta, False)
       max_eval = max(max_eval, eval)
@@ -24,7 +24,7 @@ def alphabeta_complete(game, state, player, alpha, beta, is_maximising):
   else:
     min_eval = float('inf')
     for move in legal_moves:
-      child_state = game.make_move(state, move, player)
+      child_state = game.make_move(state, move, player, evaluate = True)
       next_player = game.player2 if player == game.player1 else game.player1
       eval = alphabeta_complete(game, child_state, next_player, alpha, beta, True)
       min_eval = min(min_eval, eval)
@@ -45,7 +45,7 @@ def best_move_ab_complete(game, state, player, alpha=float('-inf'), beta=float('
 
   for move in game.get_legal_moves(state):
     node_explored += 1
-    child_state = game.make_move(state, move, player)
+    child_state = game.make_move(state, move, player, evaluate = True)
     next_player = game.player2 if player == game.player1 else game.player1
     eval = alphabeta_complete(game, child_state, next_player, alpha, beta, not is_maximising)
 

@@ -18,17 +18,18 @@ def compare_ai(game, algorithm1, algorithm2, depth1=None, depth2=None, num_games
 
   for i in range(num_games):
     state = game.get_initial_state()
+    game.state_history = []
     print("Playing Game", i + 1)
     
     # Assign players
-    game.player1 = 'X'
-    game.player2 = 'O'
     game.current_player = game.player1
-    
     player_1_total_excution_time = 0
     plyaer_2_total_excution_time = 0
-    
+  
     while not game.is_terminal(state):
+      if game.__class__.__name__ == "TigerVsDogs":
+        state_hash = tuple(tuple(row) for row in state)
+        game.state_history.append(state_hash)
       if game.current_player == game.player1:
         if algorithm1 == "complete":
           move, metrics = best_move_complete(game, state, game.current_player)
@@ -39,8 +40,7 @@ def compare_ai(game, algorithm1, algorithm2, depth1=None, depth2=None, num_games
         elif algorithm1 == "ab_limited":
           move, metrics = best_move_ab_limited(game, state, depth1, game.current_player)
         elif algorithm1 == "random":
-          move = game.get_random_move(state)
-          metrics = None
+          move, metrics = game.random_move(state)
         
         player_1_total_excution_time += metrics.execution_time
       
@@ -54,8 +54,7 @@ def compare_ai(game, algorithm1, algorithm2, depth1=None, depth2=None, num_games
         elif algorithm2 == "ab_limited":
           move, metrics = best_move_ab_limited(game, state, depth2, game.current_player)
         elif algorithm2 == "random":
-          move = game.get_random_move(state)
-          metrics = None
+          move, metrics = game.random_move(state)
         
         plyaer_2_total_excution_time += metrics.execution_time
       
@@ -70,7 +69,7 @@ def compare_ai(game, algorithm1, algorithm2, depth1=None, depth2=None, num_games
     print(f"Player O total execution time: {plyaer_2_total_excution_time:.4f}")
     print("Final Board State:")
     game.display(state)
-    winner = game.get_winner(state)
+    winner = game.get_winner(state, game.current_player)
     if winner == game.player1:
       results[f'{algo1_name}_wins'] += 1
     elif winner == game.player2:

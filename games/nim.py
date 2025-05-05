@@ -1,10 +1,11 @@
 from games.game import Game
+from evaluation.metrics import EvaluationMetrics
 from copy import deepcopy
-import random
+import random, time
 
 class Nim(Game):
-  def __init__(self, piles=[1, 3, 5, 7]):
-    self.state = piles
+  def __init__(self, num_heaps=4, max_heap_size=7):
+    self.state = [random.randint(1, max_heap_size) for _ in range(num_heaps)]
     self.player1 = 1
     self.player2 = 2
     self.current_player = self.player1
@@ -29,7 +30,7 @@ class Nim(Game):
     i,j = move
     return 0 <= i < len(state) and 1 <= j <= state[i]
   
-  def make_move(self, state, move):
+  def make_move(self, state, move, player=None, evaluate = False):
     copy_state = deepcopy(state)
     i,j = move
     if self.is_valid_move(copy_state, move):
@@ -39,27 +40,32 @@ class Nim(Game):
   def is_terminal(self, state):
     return all(pile == 0 for pile in state)
   
-  def get_winner(self, state):
+  def get_winner(self, state, player):
     if self.is_terminal(state):
-      return self.player2 if self.current_player == self.player1 else self.player1
-    return None
+      return player
+    return None 
+
+  def evaluate(self, state, player):
+    # Evaluate the state based on the current player’s perspective
+    if self.is_terminal(state):
+      winner = self.get_winner(state, player)
+      if winner == self.player1:
+        return 1  # Player 1 wins
+      elif winner == self.player2:
+        return -1  # Player 2 wins
+      else:
+        return 0  # Draw or no winner yet
+    return 0 
   
-  def evaluate(self, state):
-    winner = self.get_winner(state)
-    if winner == self.player1:
-      return 1
-    elif winner == self.player2:
-      return -1
-    else:
-      return 0
-    
   def display(self, state):
-    num_rows = len(state)
-    for i,j in enumerate(state):
-      print(" " * (len(state) - i - 1) + "|" * j + " " * (len(state) - i - 1) + "\n")
+    for i, j in enumerate(state):
+      print(f"Row {i}: {'|' * j}")
   
   def random_move(self, state):
+    metr = EvaluationMetrics()
+    start_time = time.time()
     legal_moves = self.get_legal_moves(state)
     if legal_moves:
-      return random.choice(legal_moves)
-    return
+      metr.execution_time = time.time() - start_time
+      return random.choice(legal_moves), metr
+    return None

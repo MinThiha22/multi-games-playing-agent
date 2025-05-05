@@ -1,4 +1,3 @@
-from games.nim import Nim
 from evaluation.compare_ai import compare_ai
 from algorithms.minmax_complete import best_move_complete
 from algorithms.minmax_limited import best_move_limited
@@ -10,22 +9,18 @@ def manual_game(game):
   while not game.is_terminal(state):
     print(f"Player {game.current_player}'s turn.")
     game.display(state)
-    row = input(f"Enter row number (0-{len(state) - 1}): ")
+    x = input(f"Enter number of chips to remove (1-3): ")
 
-    if not row.isdigit() or not (0 <= int(row) < len(state)) or state[int(row)] == 0:
-      print("Invalid row. Try again.")
+    if not x.isdigit():
+      print("Invalid input. Try again.")
       continue
-    row = int(row)
-
-    sticks = input(f"Enter number of sticks to remove from row {row} (1-{state[row]}): ")
-    if not sticks.isdigit() or not (1 <= int(sticks) <= state[row]):
-      print("Invalid number of sticks. Try again.")
+    x = int(x)
+    if x not in [1, 2, 3]:
+      print("Invalid chips. You can only remove 1, 2 or 3.")
       continue
-
-    sticks = int(sticks)
-    move = (row, sticks)
+    move = x
     state = game.make_move(state, move)
-    print(f"You removed {sticks} from row {row}.")
+    print(f"You removed {move}.")
     game.display(state)
     game.change_player()
     
@@ -87,7 +82,7 @@ def ai_human_game(game):
         move, metrics = best_move_ab_complete(game, state, game.current_player)
       elif algorithm == '4':
         move, metrics = best_move_ab_limited(game, state, depth, game.current_player)
-      print(f"({game.current_player}) makes move: {move}")
+      print(f"({game.current_player}) remove {move} chips")
       state = game.make_move(state, move)
       game.change_player()
       game.display(state)
@@ -95,24 +90,20 @@ def ai_human_game(game):
     # Human move
     else:
       while True:
-        game.display(state)
         print(f"Your turn ({game.current_player})")
-        row = input(f"Enter row number (0-{len(state) - 1}): ")
+        
+        x = input(f"Enter number of chips to remove (1-3): ")
 
-        if not row.isdigit() or not (0 <= int(row) < len(state)) or state[int(row)] == 0:
-            print("Invalid row. Try again.")
-            continue
-        row = int(row)
-
-        sticks = input(f"Enter number of sticks to remove from row {row} (1-{state[row]}): ")
-        if not sticks.isdigit() or not (1 <= int(sticks) <= state[row]):
-            print("Invalid number of sticks. Try again.")
-            continue
-
-        sticks = int(sticks)
-        move = (row, sticks)
+        if not x.isdigit():
+          print("Invalid input. Try again.")
+          continue
+        x = int(x)
+        if x not in [1, 2, 3]:
+          print("Invalid chips. You can only remove 1, 2 or 3.")
+          continue
+        move = x
         state = game.make_move(state, move)
-        print(f"You removed {sticks} from row {row}.")
+        print(f"You removed {move}.")
         game.display(state)
         game.change_player()
         break
@@ -120,10 +111,10 @@ def ai_human_game(game):
   print("--" * 25)
   winner = game.get_winner(state, game.current_player)
   print(f"Winner: {winner}")
+  
 
 def ai_ai_game(game):
   print("\n5 algorithms available to evaluate")
-  print("Note: Minimax complete will take a long time since it explores all nodes using depth first search to find optimal move.")
   print("1. Minimax Complete")
   print("2. Minimax Limited")
   print("3. Alpha-Beta Pruning Complete")

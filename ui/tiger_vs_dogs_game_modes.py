@@ -1,4 +1,3 @@
-from games.nim import Nim
 from evaluation.compare_ai import compare_ai
 from algorithms.minmax_complete import best_move_complete
 from algorithms.minmax_limited import best_move_limited
@@ -10,31 +9,32 @@ def manual_game(game):
   while not game.is_terminal(state):
     print(f"Player {game.current_player}'s turn.")
     game.display(state)
-    row = input(f"Enter row number (0-{len(state) - 1}): ")
+    legal_moves = game.get_legal_moves(state)
+    print("Legal moves:", legal_moves)
 
-    if not row.isdigit() or not (0 <= int(row) < len(state)) or state[int(row)] == 0:
-      print("Invalid row. Try again.")
+    move = input("Enter your move from current (row,col) to new (row,col) (eg. 0,0 0,1): ")
+    try:
+      parts = move.strip().split()
+      current = tuple(map(int,parts[0].split(",")))
+      next = tuple(map(int,parts[1].split(",")))
+      move = (current, next)
+      if not game.is_valid_move(state, move):
+          print("Invalid move. Try again.")
+          continue
+    except:
+      print("Invalid input format. Try again.")
       continue
-    row = int(row)
-
-    sticks = input(f"Enter number of sticks to remove from row {row} (1-{state[row]}): ")
-    if not sticks.isdigit() or not (1 <= int(sticks) <= state[row]):
-      print("Invalid number of sticks. Try again.")
-      continue
-
-    sticks = int(sticks)
-    move = (row, sticks)
-    state = game.make_move(state, move)
-    print(f"You removed {sticks} from row {row}.")
-    game.display(state)
-    game.change_player()
+    state = game.make_move(state, move, game.current_player)
     
+    game.change_player()
+    game.display(state)
+
   print("--" * 25)
-  winner = game.get_winner(state, game.current_player)
-  print(f"Winner: Player {winner}")
+  winner = game.get_winner(state)
+  print(f"Winner: {winner}")
+
     
 def ai_human_game(game):
-  # Choose AI algorithm
   while True:
     algorithm = input("Choose AI algorithm (1. Minimax Complete, 2. Minimax Limited, 3. Alphabeta Complete, 4. Alphabeta Limited): ")
     if algorithm in ['1', '3']:
@@ -49,35 +49,51 @@ def ai_human_game(game):
           print("Invalid depth. Please enter a positive integer.")
       break
     else:
-      print("Invalid choice. Please choose '1' or '2'.")
-  
-  # Choose first move
+      print("Invalid choice. Please choose 1, 2, 3, or 4.")
+      
   while True:
     first_move = input("Who should play first? (1. You, 2. AI): ")
     if first_move in ['1', '2']:
       break
     else: 
       print("Invalid choice. Please choose '1' or '2'.")
-      
-  if first_move == '1':
-    game.player1 = 'Human'
-    game.player2 = 'AI'
-    game.current_player = 'Human'
-  else:
-    game.player1 = 'AI'
-    game.player2 = 'Human'
-    game.current_player = 'AI'
-
-  print("**"*25)
-  print(f"{'You' if first_move == '1' else 'AI'} will play first.")
   
   state = game.get_initial_state()
-  print("Initial State:")
   game.display(state)
   
+  game.killed_dogs = 0
+
+  human_player = game.player1 if first_move == '1' else game.player2
+
   while not game.is_terminal(state):
-    # AI move
-    if game.current_player == 'AI':
+    legal_moves = game.get_legal_moves(state)
+    print("Legal Moves:", legal_moves)
+    
+    if not legal_moves:
+      print(f"No legal moves for {game.current_player}. Game over!")
+      break
+    
+    if game.current_player == human_player:
+       
+      print(f"Your turn ({game.current_player})")
+
+      while True:
+        move = input("Enter your move from current (row,col) to new (row,col) (eg. 0,0 0,1): ")
+        try:
+          parts = move.strip().split()
+          current = tuple(map(int, parts[0].split(",")))
+          next = tuple(map(int, parts[1].split(",")))
+          move = (current, next)
+          if game.is_valid_move(state, move):
+            break
+          else:
+            print("Invalid move. Try again.")
+        except:
+          print("Invalid input format. Try again.")
+          
+      state = game.make_move(state, move, game.current_player)
+    else:
+      print(f"AI's turn ({game.current_player})")
       print("AI is thinking...")
       if algorithm == '1':
         move, metrics = best_move_complete(game, state, game.current_player)
@@ -87,43 +103,33 @@ def ai_human_game(game):
         move, metrics = best_move_ab_complete(game, state, game.current_player)
       elif algorithm == '4':
         move, metrics = best_move_ab_limited(game, state, depth, game.current_player)
-      print(f"({game.current_player}) makes move: {move}")
-      state = game.make_move(state, move)
-      game.change_player()
-      game.display(state)
-       
-    # Human move
-    else:
-      while True:
-        game.display(state)
-        print(f"Your turn ({game.current_player})")
-        row = input(f"Enter row number (0-{len(state) - 1}): ")
-
-        if not row.isdigit() or not (0 <= int(row) < len(state)) or state[int(row)] == 0:
-            print("Invalid row. Try again.")
-            continue
-        row = int(row)
-
-        sticks = input(f"Enter number of sticks to remove from row {row} (1-{state[row]}): ")
-        if not sticks.isdigit() or not (1 <= int(sticks) <= state[row]):
-            print("Invalid number of sticks. Try again.")
-            continue
-
-        sticks = int(sticks)
-        move = (row, sticks)
-        state = game.make_move(state, move)
-        print(f"You removed {sticks} from row {row}.")
-        game.display(state)
-        game.change_player()
-        break
+        
+      print(f"AI ({game.current_player}) chooses move: {move}")
+      state = game.make_move(state, move, game.current_player)
+    
+    game.display(state)
+    
+    # Check if game is over after the move
+    winner = game.get_winner(state)
+    if winner:
+      print(f"Winner: {winner}")
+      break
+      
+    # Change player for next turn
+    game.change_player()
 
   print("--" * 25)
-  winner = game.get_winner(state, game.current_player)
-  print(f"Winner: {winner}")
+  winner = game.get_winner(state)
+  if winner:
+    print(f"Winner: {winner}")
+  else:
+    print("Game ended in a draw.")
+  
+  print("Thank you for playing!")
+  print("Returning to main menu...")
 
 def ai_ai_game(game):
   print("\n5 algorithms available to evaluate")
-  print("Note: Minimax complete will take a long time since it explores all nodes using depth first search to find optimal move.")
   print("1. Minimax Complete")
   print("2. Minimax Limited")
   print("3. Alpha-Beta Pruning Complete")
@@ -156,7 +162,7 @@ def ai_ai_game(game):
           print("Invalid. Both depths must be positive integers. Try again.")
       break
     else:
-        print("Invalid choice. Please choose valid options from the list.")
+      print("Invalid choice. Please choose valid options from the list.")
   
   result = compare_ai(game, algorithm1, algorithm2, depth1, depth2)  
   print(f"Player 1 ({algorithm1}) vs Player 2 ({algorithm2})")

@@ -1,20 +1,20 @@
-from games.nim import Nim
-from ui.nim_game_modes import manual_game, ai_human_game, ai_ai_game
+from games.custom_game import TakeAway
+from ui.custom_game_modes import manual_game, ai_human_game, ai_ai_game
 
-def scalable_nim():
-  print("Scalable Nim")
+def scalable_takeaway():
+  print("Scalable Take Away Game")
   while True:
-    x = input("Enter number of Heap/Row (x): ")
-    y = input("Enter max size of heap (y): ")
+    x = input("Enter number of chips:(x): ")
     
-    if x.isdigit() and y.isdigit():
-      x,y = int(x), int(y)
+    
+    if x.isdigit():
+      x = int (x)
       break
     else:
       print("Invalid input. Please enter positive integers.")
-      
-  game = Nim(x,y)
-  print(f"Game initialized with {x} heaps/rows and max number of sticks {y}")
+  
+  game = TakeAway(x)
+  print(f"Game initialized with {x} chips")
   print("1. Manual Game")
   print("2. AI vs Human Game")
   print("3. AI vs AI Evaluation")
@@ -33,15 +33,14 @@ def scalable_nim():
       case _:
         print("Invalid choice. Please try again.")
 
-def nim_ui():
-  print("\nWelcome to Nim!")
+def custom_game_ui():
+  print("\nWelcome to Custom Game (Take Away Game)!")
   print("1. Manual Game")
   print("2. AI vs Human Game")
   print("3. AI vs AI Evaluation")
-  print("4. Scalable Nim Game")
-  print("5. Back to Main Menu")
-  
-  game = Nim()
+  print("4. Scalable Take Away game")
+  print("5. Exit")
+  game = TakeAway()
   while True:
     choice = input("Choose an option (1-5): ")
     match choice:
@@ -55,10 +54,10 @@ def nim_ui():
         ai_ai_game(game)
         break
       case '4':
-        scalable_nim()
+        scalable_takeaway()
         break
       case '5':
-        print("Exiting Nim...")
+        print("Exiting Take Away...")
         print("Going back to main menu...")
         return
       case _:
@@ -67,4 +66,4 @@ def nim_ui():
   print('Thank you for playing!')
   print('Returning to menu...')
   print('=='*50)
-  nim_ui() 
+  custom_game_ui()
